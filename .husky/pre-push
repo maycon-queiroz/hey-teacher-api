@@ -14,7 +14,7 @@ fi;
 done;
 
 # rodar os testes
- ./vendor/bin/sail artisan test --parallel;
+ php artisan test --parallel;
  if [ $? -ne 0 ]; then
      echo "Opa! Deu ruim aqui com algum teste. Arrume antes de continuar... 😉";
      exit 1;
