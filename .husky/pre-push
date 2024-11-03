@@ -4,7 +4,7 @@
 #ALL_FILES=$(find . -type f -name "*.php" -o -name "*.phtml") || true
 
 # Encontrar todos os arquivos que fazem parte do commit (staged e unstaged)
-COMMIT_FILES=$(git diff --name-only --diff-filter=ACM HEAD) || true
+COMMIT_FILES=$(git diff --name-only --diff-filter=ACM HEAD | grep ".php\{0,1\}$") || true
 
 for FILE in $COMMIT_FILES
 do
