@@ -40,7 +40,7 @@ test('after creating a new question, I need to make sure that it creates on _dra
 });
 
 describe('validation rules', function () {
-    test('question::required', function () {
+    test('question :: required', function () {
         $user = User::factory()->create();
 
         Sanctum::actingAs($user);
@@ -48,6 +48,19 @@ describe('validation rules', function () {
         postJson(route('questions.store'), [])
             ->assertJsonValidationErrors([
                 'question' => 'The question field is required.',
+            ]);
+    });
+
+    test('question :: ending with question mark', function () {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        postJson(route('questions.store'), [
+            'question' => 'The question field is required',
+        ])
+            ->assertJsonValidationErrors([
+                'question' => 'Are you sur that is a question? It is missing the question mark in the end.',
             ]);
     });
 });
