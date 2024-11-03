@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->id();
             $table->foreignId('user_id')->index();
             $table->text('question');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(0)->comment('0 => draft, 1 => published');
             $table->timestamps();
         });
     }
