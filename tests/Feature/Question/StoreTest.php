@@ -63,4 +63,17 @@ describe('validation rules', function () {
                 'question' => 'Are you sur that is a question? It is missing the question mark in the end.',
             ]);
     });
+
+    test('question :: must be at least 10 characters.', function () {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        postJson(route('questions.store'), [
+            'question' => 'The que?',
+        ])
+            ->assertJsonValidationErrors([
+                'question' => 'The question field must be at least 10 characters.',
+            ]);
+    });
 });
