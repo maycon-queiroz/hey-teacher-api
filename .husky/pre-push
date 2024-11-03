@@ -24,7 +24,8 @@ done;
  do
  # Formatar cada arquivo alterado usando o Laravel Pint
  ./vendor/bin/pint "${FILE}" > /dev/null >&1 || true;
-    git add "${FILE}";
+#    git add "${FILE}";
+     git update-index --again
  done;
 
 exit 0;

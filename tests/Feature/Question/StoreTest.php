@@ -17,7 +17,7 @@ it('should be a able to store a question', function () {
     ])->assertSuccessful();
 
     assertDatabaseHas('questions', [
-        'user_id' => $user->id,
+        'user_id'  => $user->id,
         'question' => 'How to create a question?',
     ]);
 });
