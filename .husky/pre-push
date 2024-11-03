@@ -1,28 +1,33 @@
 #!/usr/bin/env sh
 
 # Encontrar todos os arquivos PHP no repositório
-  ALL_FILES=$(find . -type f -name "*.php" -o -name "*.phtml") || true
-  for FILE in $ALL_FILES
-  do
-      # Rodar o PHPStan em cada arquivo encontrado
-      ./vendor/bin/phpstan analyse --memory-limit=2048M "${FILE}"
-      if [ $? -ne 0 ]; then
-          echo "Opa! Deu ruim aqui com PHPStan. Arrume antes de continuar... 😉"
-          exit 1
-      fi
-  done
+#ALL_FILES=$(find . -type f -name "*.php" -o -name "*.phtml") || true
 
-  # Rodar os testes
-  php artisan test --parallel
-  if [ $? -ne 0 ]; then
-      echo "Opa! Deu ruim aqui com algum teste. Arrume antes de continuar... 😉"
-      exit 1
-  fi
+# Encontrar todos os arquivos que fazem parte do commit (staged e unstaged)
+COMMIT_FILES=$(git diff --name-only --diff-filter=ACM HEAD) || true
 
-  # Formatar cada arquivo usando o Laravel Pint
-  for FILE in $ALL_FILES
-  do
-      ./vendor/bin/pint "${FILE}" > /dev/null 2>&1 || true
-  done
+for FILE in $COMMIT_FILES
+do
+    # Rodar o PHPStan em cada arquivo encontrado
+    ./vendor/bin/phpstan analyse --memory-limit=2048M "${FILE}"
+    if [ $? -ne 0 ]; then
+        echo "Opa! Deu ruim aqui com PHPStan. Arrume antes de continuar... 😉"
+        exit 1
+    fi
+done
 
-  exit 0
+# Rodar os testes
+php artisan test --parallel
+if [ $? -ne 0 ]; then
+    echo "Opa! Deu ruim aqui com algum teste. Arrume antes de continuar... 😉"
+    exit 1
+fi
+
+# Formatar cada arquivo usando o Laravel Pint
+for FILE in $COMMIT_FILES
+do
+    ./vendor/bin/pint "${FILE}" > /dev/null 2>&1 || true
+    git update-index --again
+done
+
+exit 0
