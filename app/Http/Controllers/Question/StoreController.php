@@ -10,7 +10,7 @@ class StoreController extends Controller
 {
     public function __invoke(StoreRequest $request): QuestionResource
     {
-        $question = auth()->user()->questions()->create([
+        $question = user()->questions()->create([
             'question' => $request->question,
         ]);
 
