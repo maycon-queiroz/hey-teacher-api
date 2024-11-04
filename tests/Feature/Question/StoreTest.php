@@ -111,8 +111,12 @@ test('with the creation a new question, we need to sure that return ', function 
             'id'         => $question->id,
             'question'   => $question->question,
             'status'     => $question->status,
-            'created_at' => $question->created_at->format('Y-m-d'),
-            'updated_at' => $question->updated_at->format('Y-m-d'),
+            'created_by' => [
+                'id'   => $user->id,
+                'name' => $user->name,
+            ],
+            'created_at' => $question->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $question->updated_at->format('Y-m-d H:i:s'),
         ],
     ]);
 });
