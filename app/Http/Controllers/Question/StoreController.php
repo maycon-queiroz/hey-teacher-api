@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Question\StoreRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\Question;
-use Symfony\Component\HttpFoundation\Response;
 
 class StoreController extends Controller
 {
@@ -18,15 +17,5 @@ class StoreController extends Controller
         ]);
 
         return QuestionResource::make($question);
-
-        return response()->json([
-            'data' => [
-                'id'         => $question->id,
-                'question'   => $question->question,
-                'status'     => $question->status,
-                'created_at' => $question->created_at->format('Y-m-d'),
-                'updated_at' => $question->updated_at->format('Y-m-d'),
-            ],
-        ], Response::HTTP_CREATED);
     }
 }
