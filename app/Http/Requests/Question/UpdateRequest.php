@@ -4,6 +4,7 @@ namespace App\Http\Requests\Question;
 
 use App\Rules\WithQuestionMark;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @property-read string $question
@@ -32,7 +33,7 @@ class UpdateRequest extends FormRequest
                 'min:10',
                 'max:255',
                 new WithQuestionMark,
-                'unique:questions,question',
+                Rule::unique('questions')->ignore($this->route()->question->id),
             ],
         ];
     }

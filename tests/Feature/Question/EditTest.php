@@ -3,7 +3,7 @@
 use App\Models\{Question, User};
 use Laravel\Sanctum\Sanctum;
 
-use function Pest\Laravel\{assertDatabaseHas, postJson, putJson};
+use function Pest\Laravel\{assertDatabaseHas, putJson};
 
 it('should be a able to update a question', function () {
     $user     = User::factory()->create();
@@ -51,33 +51,32 @@ describe('validation rules', function () {
             ]);
     });
 
-    //    test('question :: must be at least 10 characters.', function () {
-    //        $user = User::factory()->create();
-    //
-    //        Sanctum::actingAs($user);
-    //
-    //        postJson(route('questions.store'), [
-    //            'question' => 'The que?',
-    //        ])
-    //            ->assertJsonValidationErrors([
-    //                'question' => 'The question field must be at least 10 characters.',
-    //            ]);
-    //    });
-    //
-    //    test('question :: should be unique', function () {
-    //        $user     = User::factory()->create();
-    //        $question = Question::Factory()->create([
-    //            'user_id'  => $user->id,
-    //            'question' => 'How to create a question?',
-    //        ]);
-    //
-    //        Sanctum::actingAs($user);
-    //
-    //        postJson(route('questions.store'), [
-    //            'question' => $question->question,
-    //        ])
-    //            ->assertJsonValidationErrors([
-    //                'question' => 'The question has already been taken.',
-    //            ]);
-    //    });
+    test('question :: must be at least 10 characters.', function () {
+        $user     = User::factory()->create();
+        $question = Question::factory()->create(['user_id' => $user->id]);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'The que?',
+        ])
+            ->assertJsonValidationErrors([
+                'question' => 'The question field must be at least 10 characters.',
+            ]);
+    });
+
+    test('question :: should be unique only if id is different', function () {
+        $user = User::factory()->create();
+
+        $question = Question::Factory()->create([
+            'user_id'  => $user->id,
+            'question' => 'How to create a question?',
+        ]);
+
+        Sanctum::actingAs($user);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'How to create a question?',
+        ])->assertOk();
+    });
 });
