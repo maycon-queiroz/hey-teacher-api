@@ -80,3 +80,23 @@ describe('validation rules', function () {
         ])->assertOk();
     });
 });
+
+describe('security', function () {
+    test('only the person who create the question can update the same question', function () {
+        $user  = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $question = Question::factory()->create(['user_id' => $user->id]);
+
+        Sanctum::actingAs($user2);
+
+        putJson(route('questions.update', $question), [
+            'question' => 'Updating the question?',
+        ])->assertForbidden();
+
+        assertDatabaseHas('questions', [
+            'id'       => $question->id,
+            'question' => $question->question,
+        ]);
+    });
+});
