@@ -79,6 +79,26 @@ describe('validation rules', function () {
             'question' => 'How to create a question?',
         ])->assertOk();
     });
+
+    test('question :: should be edit only if the status is draft', function () {
+        $user = User::factory()->create();
+
+        $question = Question::Factory()->create([
+            'user_id'  => $user->id,
+            'question' => 'How to create a question?',
+            'status'   => 1,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = putJson(route('questions.update', $question), [
+            'question' => 'The question should be a draft to be able to edit?',
+        ]);
+        
+        $response->assertJsonValidationErrors([
+            'question' => 'The question should be a draft to be able to edit',
+        ]);
+    });
 });
 
 describe('security', function () {
