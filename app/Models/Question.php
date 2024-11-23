@@ -44,7 +44,7 @@ class Question extends Model
     // Mutator
     public function setStatusAttribute($value): void
     {
-        $this->attributes['status'] = $value === 'publish';
+        $this->attributes['status'] = $value === 1;
     }
 
     public function setAttributes(array $attributes): void
