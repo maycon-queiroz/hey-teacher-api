@@ -100,15 +100,15 @@ describe('validation rules', function () {
         ]);
     });
 
-    test('question ::should be update a question and we need to sure that return ', function () {
-        $user = User::factory()->create();
-        $question = Question::Factory()->for($user,'user')->create();
+    test('question :: should be update a question and we need to sure that return ', function () {
+        $user     = User::factory()->create();
+        $question = Question::Factory()->for($user, 'user')->create();
 
         Sanctum::actingAs($user);
 
         $response = putJson(route('questions.update', $question), [
             'question' => 'The question should be a draft to be able to edit?',
-        ]);
+        ])->assertOk();
 
         $question = Question::query()->latest()->first();
 
