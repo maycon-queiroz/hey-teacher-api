@@ -94,9 +94,36 @@ describe('validation rules', function () {
         $response = putJson(route('questions.update', $question), [
             'question' => 'The question should be a draft to be able to edit?',
         ]);
-        
+
         $response->assertJsonValidationErrors([
             'question' => 'The question should be a draft to be able to edit',
+        ]);
+    });
+
+    test('question ::should be update a question and we need to sure that return ', function () {
+        $user = User::factory()->create();
+        $question = Question::Factory()->for($user,'user')->create();
+
+        Sanctum::actingAs($user);
+
+        $response = putJson(route('questions.update', $question), [
+            'question' => 'The question should be a draft to be able to edit?',
+        ]);
+
+        $question = Question::query()->latest()->first();
+
+        $response->assertJson([
+            'data' => [
+                'id'         => $question->id,
+                'question'   => $question->question,
+                'status'     => $question->status,
+                'created_by' => [
+                    'id'   => $user->id,
+                    'name' => $user->name,
+                ],
+                'created_at' => $question->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $question->updated_at->format('Y-m-d H:i:s'),
+            ],
         ]);
     });
 });
