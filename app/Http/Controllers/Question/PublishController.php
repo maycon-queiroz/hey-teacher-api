@@ -10,6 +10,7 @@ class PublishController extends Controller
 {
     public function __invoke(Question $question)
     {
+        abort_unless($question->status === 'draft', 404, 'Question already published');
 
         if (!Gate::allows('publish', $question)) {
             abort(403);
