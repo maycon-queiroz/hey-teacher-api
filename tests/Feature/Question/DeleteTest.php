@@ -11,7 +11,7 @@ test('should be able to delete a question', function () {
 
     Sanctum::actingAs($user);
 
-    deleteJson(route('questions.destroy', $question))
+    deleteJson(route('questions.delete', $question))
         ->assertNoContent();
 
     assertDatabaseMissing('questions', ['id' => $question->id]);
@@ -24,7 +24,7 @@ test('should be able to delete a question if user was created', function () {
 
     Sanctum::actingAs($userWrong);
 
-    deleteJson(route('questions.destroy', $question))
+    deleteJson(route('questions.delete', $question))
         ->assertForbidden();
 
     assertDatabaseHas('questions', ['id' => $question->id]);

@@ -9,7 +9,7 @@ class DeleteController
 {
     public function __invoke(Question $question, DeleteRequest $deleteRequest)
     {
-        $question->delete();
+        $question->forceDelete();
 
         return response()->noContent();
     }
