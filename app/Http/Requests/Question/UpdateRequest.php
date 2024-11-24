@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Question;
 
 use App\Models\Question;
-use App\Policies\QuestionPolicy;
 use App\Rules\{OnlyAsDraft, WithQuestionMark};
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,17 +34,17 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         /** @var Question $question */
-        $question = $this->route()->question;
-            
+        $question = $this->route()->question;  // @phpstan-ignore-line
+
         return [
             'question' => [
                 'required',
                 'string',
                 'min:10',
                 'max:255',
-                new OnlyAsDraft($question), // @phpstan-ignore-line
-                new WithQuestionMark, // @phpstan-ignore-line @pint-ignore-line
-                Rule::unique('questions')->ignore($question->id), // @phpstan-ignore-line
+                new OnlyAsDraft($question),
+                new WithQuestionMark(),
+                Rule::unique('questions')->ignore($question->id),
             ],
         ];
     }
