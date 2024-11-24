@@ -3,11 +3,12 @@
 use App\Models\{Question, User};
 use Laravel\Sanctum\Sanctum;
 
-use function Pest\Laravel\{assertDatabaseHas, assertNotSoftDeleted, assertSoftDeleted, putJson};
+use function Pest\Laravel\{assertDatabaseHas, assertNotSoftDeleted, putJson};
 
 test('should be able to publish a question', function () {
     $user     = User::factory()->create();
-    $question = Question::Factory()->for($user, 'user')->create();
+    $question = Question::Factory()->for($user, 'user')
+        ->create(['status' => 1]);
 
     Sanctum::actingAs($user);
 
@@ -17,23 +18,22 @@ test('should be able to publish a question', function () {
     assertDatabaseHas('questions', ['id' => $question->id, 'status' => 1]);
     $response->assertJsonFragment(['message' => 'Question published successfully']);
 });
-//
-//test( 'should be able to publish if user was created', function () {
-//    $user = User::factory()->create();
-//    $userWrong = User::factory()->create();
-//    $question = Question::Factory()->for( $user, 'user' )->create();
-//
-//    $question->delete();
-//    assertSoftDeleted( 'questions', ['id' => $question->id] );
-//
-//    Sanctum::actingAs( $userWrong );
-//
-//    putJson( route( 'questions.publish', $question ) )
-//        ->assertForbidden();
-//
-//    assertSoftDeleted( 'questions', ['id' => $question->id] );
-//} );
-//
+
+test('should be able to publish if user is own', function () {
+    $user      = User::factory()->create();
+    $userWrong = User::factory()->create();
+
+    $question = Question::Factory()->for($user, 'user')
+        ->create(['status' => 1]);
+
+    Sanctum::actingAs($userWrong);
+
+    putJson(route('questions.publish', $question))
+        ->assertForbidden();
+
+    assertDatabaseHas('questions', ['id' => $question->id, 'status' => 1]);
+});
+
 //test( 'should be able not allow publish a question if not archived', function () {
 //    $user = User::factory()->create();
 //    $question = Question::Factory()->for( $user, 'user' )->create();
