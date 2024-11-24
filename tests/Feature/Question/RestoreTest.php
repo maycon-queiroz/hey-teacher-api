@@ -38,3 +38,15 @@ test('should be able to restore if user was created', function () {
 
     assertSoftDeleted('questions', ['id' => $question->id]);
 });
+
+test('should be able not allow restore a question if not archived', function () {
+    $user     = User::factory()->create();
+    $question = Question::Factory()->for($user, 'user')->create();
+
+    Sanctum::actingAs($user);
+
+    putJson(route('questions.restore', $question))
+        ->assertNotFound();
+
+    assertNotSoftDeleted('questions', ['id' => $question->id]);
+});

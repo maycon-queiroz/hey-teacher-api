@@ -10,7 +10,7 @@ class RestoreController extends Controller
 {
     public function __invoke(int $int)
     {
-        $question = Question::withTrashed()->findOrFail($int);
+        $question = Question::onlyTrashed()->findOrFail($int);
 
         if (!Gate::allows('restore', $question)) {
             abort(403);
