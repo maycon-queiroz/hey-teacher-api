@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 use Illuminate\Support\Carbon;
 
 /**
@@ -20,6 +20,7 @@ class Question extends Model
 {
     /** @use HasFactory<QuestionFactory> */
     use HasFactory;
+    use SoftDeletes;
 
     protected $hidden = [
         'user_id',
