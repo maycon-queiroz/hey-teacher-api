@@ -2,7 +2,7 @@
 
 use App\Models\User;
 
-use function Pest\Laravel\{assertDatabaseHas, postJson};
+use function Pest\Laravel\{assertAuthenticatedAs, assertDatabaseHas, postJson};
 use function PHPUnit\Framework\assertTrue;
 
 it('should be abe to registration in the application', function () {
@@ -21,6 +21,20 @@ it('should be abe to registration in the application', function () {
     $johnDoe = User::whereEmail('johndoe@example.com')->first();
 
     assertTrue(\Illuminate\Support\Facades\Hash::check('12345678', $johnDoe->password));
+});
+
+it('should be abe log user after registrarion', function () {
+
+    postJson(route('register'), [
+        'name'     => 'John doe',
+        'email'    => 'johndoe@example.com',
+        'password' => '12345678',
+    ])->assertOk();
+
+    $user = User::query()->first();
+
+    assertAuthenticatedAs($user);
+
 });
 
 describe('validations', function () {

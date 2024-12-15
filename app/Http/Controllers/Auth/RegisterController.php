@@ -19,7 +19,9 @@ class RegisterController extends Controller
             'password' => ['required', 'min:6', 'max:255'],
         ]);
 
-        User::create($data);
+        $user = User::create($data);
+
+        auth()->guard()->login($user);
 
     }
 }
