@@ -24,7 +24,7 @@ it('should be abe to registration in the application', function () {
 });
 
 describe('validations', function () {
-    test('should be able to register a new user', function ($rule, $value, $meta = []) {
+    test('name', function ($rule, $value, $meta = []) {
         postJson(route('register'), ['name' => $value])
             ->assertJsonValidationErrors([
                 'name' => [__(
@@ -36,5 +36,21 @@ describe('validations', function () {
         'required' => ['required', ''],
         'min:3'    => ['min', 'ad', ['min' => 3]],
         'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
+        ]);
+
+    test('email', function ($rule, $value, $meta = []) {
+        postJson(route('register'), ['email' => $value])
+            ->assertJsonValidationErrors([
+                'email' => [__(
+                    'validation.' . $rule,
+                    array_merge(['attribute' => 'email'], $meta)
+                )],
+            ]);
+    })->with([
+        'required' => ['required', ''],
+        'min:3'    => ['min', 'ad', ['min' => 3]],
+        'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
+        'email'  => ['email', 'no-email'],
     ]);
+
 });
