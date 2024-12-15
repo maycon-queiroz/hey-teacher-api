@@ -36,7 +36,7 @@ describe('validations', function () {
         'required' => ['required', ''],
         'min:3'    => ['min', 'ad', ['min' => 3]],
         'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
-        ]);
+    ]);
 
     test('email', function ($rule, $value, $meta = []) {
         postJson(route('register'), ['email' => $value])
@@ -50,7 +50,21 @@ describe('validations', function () {
         'required' => ['required', ''],
         'min:3'    => ['min', 'ad', ['min' => 3]],
         'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
-        'email'  => ['email', 'no-email'],
+        'email'    => ['email', 'no-email'],
+    ]);
+
+    test('password', function ($rule, $value, $meta = []) {
+        postJson(route('register'), ['password' => $value])
+            ->assertJsonValidationErrors([
+                'password' => [__(
+                    'validation.' . $rule,
+                    array_merge(['attribute' => 'password'], $meta)
+                )],
+            ]);
+    })->with([
+        'required' => ['required', ''],
+        'min:3'    => ['min', 'ad', ['min' => 6]],
+        'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
     ]);
 
 });
