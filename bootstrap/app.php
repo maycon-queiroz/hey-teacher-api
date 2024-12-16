@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: '/',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
