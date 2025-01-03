@@ -38,6 +38,7 @@ it('should not be able to login with invalid credentials', function ($email, $pa
 test('should not be able to login if params not is provided', function () {
     PostJson('/login', ['email' => '', 'password' => ''])
         ->assertJsonValidationErrors([
-            'email' => [__('auth.failed')],
+            'email'    => [__('validation.required', ['attribute' => 'email'])],
+            'password' => [__('validation.required', ['attribute' => 'password'])],
         ]);
 });
