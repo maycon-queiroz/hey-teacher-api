@@ -9,6 +9,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/register', Auth\RegisterController::class)->name('register');
+Route::post('/login', Auth\LoginController::class)->name('login');
 
 // region Authentication
 Route::middleware('auth:sanctum')->group(function () {
