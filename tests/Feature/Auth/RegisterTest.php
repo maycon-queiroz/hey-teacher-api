@@ -53,6 +53,10 @@ describe('validations', function () {
     ]);
 
     test('email', function ($rule, $value, $meta = []) {
+        if ($rule == 'unique') {
+            User::factory()->create(['email' => $value]);
+        }
+
         postJson(route('register'), ['email' => $value])
             ->assertJsonValidationErrors([
                 'email' => [__(
@@ -65,6 +69,7 @@ describe('validations', function () {
         'min:3'    => ['min', 'ad', ['min' => 3]],
         'max:255'  => ['max', str_repeat('*', 256), ['max' => 255]],
         'email'    => ['email', 'no-email'],
+        'unique'   => ['unique', 'joe@doe.com'],
     ]);
 
     test('password', function ($rule, $value, $meta = []) {
