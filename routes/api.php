@@ -10,6 +10,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', Auth\RegisterController::class)->name('register');
 Route::post('/login', Auth\LoginController::class)->name('login');
+Route::post('/logout', Auth\LogoutController::class)->name('logout');
 
 // region Authentication
 Route::middleware('auth:sanctum')->group(function () {
