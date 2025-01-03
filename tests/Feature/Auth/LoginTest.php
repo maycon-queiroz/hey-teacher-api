@@ -18,13 +18,13 @@ it('should be able to login', function () {
 
 });
 
-it('should not be able to login with invalid credentials', function () {
+it('should not be able to login with invalid credentials', function ($email, $password) {
     User::factory()->create([
         'email'    => 'johndoe@doe.com',
         'password' => \Illuminate\Support\Facades\Hash::make('password'),
     ]);
 
-    PostJson('/login', ['email' => 'johndoe@doe.com', 'password' => '<PASSWORD>'])
+    PostJson('/login', ['email' => $email, 'password' => $password])
         ->assertJsonValidationErrors([
             'email' => [__('auth.failed')],
         ]);
