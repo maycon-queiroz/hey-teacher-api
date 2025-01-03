@@ -34,3 +34,10 @@ it('should not be able to login with invalid credentials', function () {
     'password_wrong' => ['johndoe@doe.com', 'password_wrong'],
     'email_ivalid'   => ['johndoedoe.com', 'password'],
 ]);
+
+test('should not be able to login if params not is provided', function () {
+    PostJson('/login', ['email' => '', 'password' => ''])
+        ->assertJsonValidationErrors([
+            'email' => [__('auth.failed')],
+        ]);
+});
