@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
+        $middleware->authenticateSessions();
+        $middleware->prependToGroup('api', ['auth:sanctum']);
+
         $middleware->append([
             StartSession::class,
         ]);
