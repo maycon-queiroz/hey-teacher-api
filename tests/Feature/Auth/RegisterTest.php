@@ -43,10 +43,12 @@ describe('validations', function () {
     test('name', function ($rule, $value, $meta = []) {
         postJson(route('register'), ['name' => $value])
             ->assertJsonValidationErrors([
-                'name' => [__(
-                    'validation.' . $rule,
-                    array_merge(['attribute' => 'name'], $meta)
-                )],
+                'name' => [
+                    __(
+                        'validation.' . $rule,
+                        array_merge(['attribute' => 'name'], $meta)
+                    ),
+                ],
             ]);
     })->with([
         'required' => ['required', ''],
@@ -61,10 +63,12 @@ describe('validations', function () {
 
         postJson(route('register'), ['email' => $value])
             ->assertJsonValidationErrors([
-                'email' => [__(
-                    'validation.' . $rule,
-                    array_merge(['attribute' => 'email'], $meta)
-                )],
+                'email' => [
+                    __(
+                        'validation.' . $rule,
+                        array_merge(['attribute' => 'email'], $meta)
+                    ),
+                ],
             ]);
     })->with([
         'required'  => ['required', ''],
@@ -78,10 +82,12 @@ describe('validations', function () {
     test('password', function ($rule, $value, $meta = []) {
         postJson(route('register'), ['password' => $value])
             ->assertJsonValidationErrors([
-                'password' => [__(
-                    'validation.' . $rule,
-                    array_merge(['attribute' => 'password'], $meta)
-                )],
+                'password' => [
+                    __(
+                        'validation.' . $rule,
+                        array_merge(['attribute' => 'password'], $meta)
+                    ),
+                ],
             ]);
     })->with([
         'required' => ['required', ''],

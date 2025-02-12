@@ -20,8 +20,7 @@ class RegisterController extends Controller
         ]);
 
         $user = User::create($data);
-
-        auth()->guard()->login($user);
+        auth()->guard('web')->login($user);
 
     }
 }
