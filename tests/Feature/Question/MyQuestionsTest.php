@@ -41,3 +41,38 @@ it('should able list only questions taht the logged has been created :: publishe
         'id' => $archived->id,
     ]);
 });
+
+it('should able list only questions taht the logged has been created :: draft', function () {
+    $user       = User::factory()->create();
+    $userWrong  = User::factory()->create();
+    $draft      = Question::factory()->for($user)->draft()->create();
+    $draftWrong = Question::factory()->for($userWrong)->draft()->create();
+    $archived   = Question::factory()->archived()->create();
+
+    Sanctum::actingAs($user);
+
+    $response = getJson(route('questions.my-questions', ['status' => 'draft']));
+    $response->assertOk();
+    $response->assertJsonFragment([
+        'id'         => $draft->id,
+        'question'   => $draft->question,
+        'status'     => 'draft',
+        'created_by' => [
+            'id'   => $draft->user->id,
+            'name' => $draft->user->name,
+        ],
+        'created_at' => $draft->created_at->format('Y-m-d H:i:s'),
+        'updated_at' => $draft->updated_at->format('Y-m-d H:i:s'),
+    ]);
+    $response->assertJsonMissing([
+        'status' => 'publish',
+    ]);
+
+    $response->assertJsonMissing([
+        'id' => $draftWrong->id,
+    ]);
+
+    $response->assertJsonMissing([
+        'id' => $archived->id,
+    ]);
+});
