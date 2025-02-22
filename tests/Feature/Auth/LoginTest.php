@@ -10,7 +10,7 @@ it('should be able to login', function () {
         'password' => \Illuminate\Support\Facades\Hash::make('password'),
     ]);
 
-    PostJson('/login', ['email' => 'johndoe@doe.com', 'password' => 'password'])
+    PostJson(route('login'), ['email' => 'johndoe@doe.com', 'password' => 'password'])
         ->assertNoContent();
 
     assertAuthenticated('web');
@@ -24,7 +24,7 @@ it('should not be able to login with invalid credentials', function ($email, $pa
         'password' => \Illuminate\Support\Facades\Hash::make('password'),
     ]);
 
-    PostJson('/login', ['email' => $email, 'password' => $password])
+    PostJson(route('login'), ['email' => $email, 'password' => $password])
         ->assertJsonValidationErrors([
             'email' => [__('auth.failed')],
         ]);
