@@ -5,7 +5,7 @@ namespace App\Models;
 use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\{Model, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
 use Illuminate\Support\Carbon;
 
 /**
@@ -51,5 +51,15 @@ class Question extends Model
     public function setAttributes(array $attributes): void
     {
         $this->status = $attributes['status'];
+    }
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', true);
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        return $query->when($search, fn ($query) => $query->where('question', 'like', "%$search%"));
     }
 }

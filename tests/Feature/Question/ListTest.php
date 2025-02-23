@@ -28,3 +28,20 @@ it('should be able to list questions', function () {
         'id' => $draft->id,
     ]);
 });
+
+it('should be able search a question', function () {
+    $user = User::factory()->create();
+    Sanctum::actingAs($user);
+
+    Question::factory()->published()->create(['question' => 'first question?']);
+    Question::factory()->published()->create(['question' => 'second question?']);
+    $response = getJson(route('questions.index', ['q' => 'first']));
+    $response->assertOk();
+    $response->assertJsonFragment(['question' => 'first question?']);
+    $response->assertJsonMissing(['question' => 'second question?']);
+
+    $response = getJson(route('questions.index', ['q' => 'second']));
+    $response->assertOk();
+    $response->assertJsonFragment(['question' => 'second question?']);
+    $response->assertJsonMissing(['question' => 'first question?']);
+});
