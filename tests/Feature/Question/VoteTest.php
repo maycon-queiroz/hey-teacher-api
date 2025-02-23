@@ -14,6 +14,10 @@ it('should be able to vote a question', function () {
     $response = postJson(route('questions.like', $question));
     $response->assertCreated();
 
+    expect($question) // @phpstan-ignore-line
+        ->votes
+        ->toHaveCount(1);
+
     assertDatabaseHas('votes', [
         'question_id' => $question->id,
         'like'        => 1,
@@ -30,6 +34,10 @@ it('should be able to remote  or unlike vote a question', function () {
 
     $response = postJson(route('questions.unlike', $question));
     $response->assertCreated();
+
+    expect($question) // @phpstan-ignore-line
+        ->votes
+        ->toHaveCount(1);
 
     assertDatabaseHas('votes', [
         'question_id' => $question->id,
