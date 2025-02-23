@@ -16,3 +16,4 @@ Route::put('questions/{question}/restore', Question\RestoreController::class)->n
 Route::put('questions/{question}/publish', Question\PublishController::class)->name('questions.publish');
 Route::get('questions/my-questions/{status}', Question\MyController::class)->name('questions.my-questions');
 Route::post('question/{question}/like', Question\LikeController::class)->name('questions.like');
+Route::post('question/{question}/unlike', Question\UnLikeController::class)->name('questions.unlike');
