@@ -17,3 +17,4 @@ Route::put('questions/{question}/publish', Question\PublishController::class)->n
 Route::get('questions/my-questions/{status}', Question\MyController::class)->name('questions.my-questions');
 Route::post('question/{question}/like', Question\LikeController::class)->name('questions.like');
 Route::post('question/{question}/unlike', Question\UnLikeController::class)->name('questions.unlike');
+Route::get('questions/export', Question\ExportController::class)->name('questions.export');
