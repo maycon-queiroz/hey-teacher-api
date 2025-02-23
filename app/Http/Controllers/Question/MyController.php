@@ -23,18 +23,13 @@ class MyController extends Controller
 
         $status = $this->status($statusRequest);
 
-        if ($status === 2) {
-            $question = Question::query()
-                ->whereUserId(auth()->id())
-                ->onlyTrashed()
-                ->get();
-
-            return QuestionResource::collection($question);
-        }
-
         $question = Question::query()
             ->whereUserId(auth()->id())
-            ->where('status', $status)
+            ->when(
+                $status === 2,
+                fn ($query) => $query->onlyTrashed(),
+                fn ($query) => $query->where('status', $status)
+            )
             ->get();
 
         return QuestionResource::collection($question);
