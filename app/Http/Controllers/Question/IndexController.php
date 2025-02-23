@@ -12,13 +12,12 @@ class IndexController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        $search   = request()->get('q', null);
         $question = Question::query()
             ->published()
-            ->search($search)
-            ->get();
+            ->search(request()->get('q', null))
+            ->paginate();
 
         return QuestionResource::collection($question);
     }
