@@ -17,6 +17,8 @@ it('should be able to list questions', function () {
         'id'         => $published->id,
         'question'   => $published->question,
         'status'     => $published->status,
+        'likes'      => $published->likes,
+        'unlikes'    => $published->unlikes,
         'created_by' => [
             'id'   => $published->user->id,
             'name' => $published->user->name,

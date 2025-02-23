@@ -15,6 +15,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property user $user
+ * @property ?int $likes
+ * @property ?int $unlikes
  */
 class Question extends Model
 {
@@ -25,12 +27,6 @@ class Question extends Model
     protected $hidden = [
         'user_id',
     ];
-
-    //    protected $casts = [
-    //        'created_at' => 'datetime:Y-m-d',
-    //        'updated_at' => 'datetime:Y-m-d',
-    //        'status'     => 'boolean',
-    //    ];
 
     public function user(): BelongsTo
     {
