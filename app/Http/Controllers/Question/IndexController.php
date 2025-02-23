@@ -17,6 +17,8 @@ class IndexController extends Controller
         $question = Question::query()
             ->published()
             ->search(request()->get('q', null))
+            ->sumVotes()
+            ->orderVotes()
             ->paginate();
 
         return QuestionResource::collection($question);

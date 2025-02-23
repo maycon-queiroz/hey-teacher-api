@@ -20,6 +20,8 @@ class QuestionResource extends JsonResource
             'id'         => $this->id,
             'question'   => $this->question,
             'status'     => $this->status,
+            'likes'      => $this->likes ?? 0,
+            'unlikes'    => $this->unlikes ?? 0,
             'created_by' => [
                 'id'   => $this->user->id,
                 'name' => $this->user->name,

@@ -5,7 +5,7 @@ namespace App\Models;
 use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Casts\Attribute, Model, Relations\HasMany, SoftDeletes};
 use Illuminate\Support\Carbon;
 
 /**
@@ -15,6 +15,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property user $user
+ * @property ?int $likes
+ * @property ?int $unlikes
  */
 class Question extends Model
 {
@@ -25,12 +27,6 @@ class Question extends Model
     protected $hidden = [
         'user_id',
     ];
-
-    //    protected $casts = [
-    //        'created_at' => 'datetime:Y-m-d',
-    //        'updated_at' => 'datetime:Y-m-d',
-    //        'status'     => 'boolean',
-    //    ];
 
     public function user(): BelongsTo
     {
@@ -61,5 +57,34 @@ class Question extends Model
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
         return $query->when($search, fn ($query) => $query->where('question', 'like', "%$search%"));
+    }
+
+    public function scopeSumVotes(Builder $query): Builder
+    {
+        return $query->withSum('votes', 'like')
+            ->withSum('votes', 'unlike');
+    }
+
+    public function scopeOrderVotes(Builder $query): Builder
+    {
+        return $query->orderByRaw('
+                    case when votes_sum_like is null then 0 else votes_sum_like end desc,
+                    case when votes_sum_unlike is null then 0 else votes_sum_unlike end
+           ');
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    public function likes(): Attribute
+    {
+        return new Attribute(get: fn () => $this->votes()->sum('like'));
+    }
+
+    public function unlikes(): Attribute
+    {
+        return new Attribute(get: fn () => $this->votes()->sum('unlike'));
     }
 }
